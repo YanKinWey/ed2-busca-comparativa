@@ -10,12 +10,9 @@
 **Nome do time:** ____________________
 
 | Nome | Usuário do GitHub |
-| --- | --- |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| Yanto Weyckme | YanKinWey |
+|  Rigson Yuri  | Specter-1610 |
+| Saulo Rafael | Saumonkk |
 
 ## O problema
 
