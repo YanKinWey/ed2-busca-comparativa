@@ -24,4 +24,13 @@ int busca_binaria(const Aluno *v, int n, int mat) {
     }
 
     return -1; // Não encontrou o aluno no vetor
+    
+    /* TODO:
+       ini = 0, fim = n - 1;
+       enquanto ini <= fim:
+         meio = ini + (fim - ini) / 2;  comparacoes++;
+         se v[meio].matricula == mat: achou;
+         se for menor: procure à direita; senão, à esquerda. */
+    (void)v; (void)n; (void)mat;
+    return -1;
 }

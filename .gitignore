@@ -1,2 +1,8 @@
 ﻿*.exe
 *.o
+comparativo
+comparativo.exe
+*.o
+*.exe
+.vscode/
+*.dSYM/
