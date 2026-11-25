@@ -1,47 +1,78 @@
+#include <stdio.h>
 #include <stdlib.h>
-#include "hash.h"
-#include "medicao.h"
 
-/* ===================== TAREFA 3: TABELA HASH =====================
-   Encadeamento: cada posição da tabela é uma lista ligada de NoHash. */
+/* Se o professor já fornece hash.h, apague estas definições e use o .h */
+typedef struct No {
+    int matricula;
+    int pos;            /* posição do aluno no vetor */
+    struct No *prox;
+} No;
 
+typedef struct {
+    No **tab;           /* vetor de m listas */
+    int m;              /* tamanho (primo) */
+} Hash;
+
+/* Método da divisão */
+int hash_funcao(int chave, int m) {
+    return chave % m;
+}
+
+/* Cria a tabela com m listas vazias */
 Hash *hash_cria(int m) {
-    /* TODO: aloque um Hash, guarde m, zere n e aloque o vetor lista com
-       m ponteiros NULL (use calloc). Devolva o ponteiro.
-       Enquanto devolver NULL, o programa pula o teste da hash. */
-    (void)m;
-    return NULL;
+    Hash *h = malloc(sizeof(Hash));
+    if (!h) return NULL;
+    h->m = m;
+    h->tab = calloc(m, sizeof(No *));   /* tudo NULL */
+    if (!h->tab) { free(h); return NULL; }
+    return h;
 }
 
-int hash_funcao(const Hash *h, int chave) {
-    /* TODO: método da divisão: chave % m */
-    (void)h; (void)chave;
-    return 0;
+/* Insere no início da lista */
+void hash_insere(Hash *h, int matricula, int pos) {
+    int i = hash_funcao(matricula, h->m);
+    No *novo = malloc(sizeof(No));
+    if (!novo) return;
+    novo->matricula = matricula;
+    novo->pos = pos;
+    novo->prox = h->tab[i];
+    h->tab[i] = novo;
 }
 
-void hash_insere(Hash *h, int chave, int pos) {
-    /* TODO: calcule i = hash_funcao(h, chave); crie um NoHash com chave e
-       pos e insira-o no INÍCIO da lista h->lista[i]. Aumente h->n. */
-    (void)h; (void)chave; (void)pos;
-}
-
-int hash_busca(const Hash *h, int chave) {
-    /* TODO: percorra a lista da posição hash_funcao(h, chave).
-       Faça comparacoes++ a cada nó visitado.
-       Achou: devolva p->pos. Chegou ao fim: devolva -1. */
-    (void)h; (void)chave;
+/* Devolve a posição no vetor ou -1. Soma 1 em *comparacoes por nó visitado */
+int hash_busca(Hash *h, int matricula, long *comparacoes) {
+    int i = hash_funcao(matricula, h->m);
+    for (No *p = h->tab[i]; p != NULL; p = p->prox) {
+        (*comparacoes)++;
+        if (p->matricula == matricula)
+            return p->pos;
+    }
     return -1;
 }
 
-int hash_maior_lista(const Hash *h) {
-    /* TODO: devolva o tamanho da maior lista da tabela. */
-    (void)h;
-    return 0;
+/* Tamanho da maior lista da tabela */
+int hash_maior_lista(Hash *h) {
+    int maior = 0;
+    for (int i = 0; i < h->m; i++) {
+        int tam = 0;
+        for (No *p = h->tab[i]; p != NULL; p = p->prox)
+            tam++;
+        if (tam > maior) maior = tam;
+    }
+    return maior;
 }
 
+/* Libera todos os nós e a tabela */
 void hash_libera(Hash *h) {
-    if (h == NULL) return;
-    /* TODO: libere todos os nós de todas as listas antes das linhas abaixo. */
-    free(h->lista);
+    if (!h) return;
+    for (int i = 0; i < h->m; i++) {
+        No *p = h->tab[i];
+        while (p != NULL) {
+            No *prox = p->prox;
+            free(p);
+            p = prox;
+        }
+    }
+    free(h->tab);
     free(h);
 }
